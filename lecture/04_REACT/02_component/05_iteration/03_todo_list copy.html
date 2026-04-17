@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script> 
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const {useState} = React;
+
+        //TodoItem 컴포넌트
+        function TodoItem( {todo, onRemove, onToggle} ){
+            return(
+                <p>
+                    <input 
+                        type="checkbox"
+                        checked={todo.isDone} //취소선을 위해 변수 추가
+                        onChange={()=> onToggle(todo.id) }
+                    />
+                    <span style={ {
+                        //삼항 연산자 사용하여 스타일 추가
+                        textDecoration : todo.isDone ? 'line-through' : 'none'
+                    } }>{todo.text}</span> 
+                    <button onClick={ ()=>onRemove(todo.id) }>x</button>
+                </p>
+            )
+        }
+        //props: todo, onRemove, onToggle : 리스트 추가 아이템
+        
+        //Todolist 컴포넌트(상태 + 로직)
+        function TodoList(){
+            // 상태(state) 만들기
+            const [todos, setTodos] = useState([]);
+            const [inputText, setInputText] = useState(''); //초기 값
+
+            // 함수들 구현
+            // 입력값 변경
+            const handleChange = (e) => {
+                setInputText(e.target.value);
+            };
+            const handleAdd = () => {
+                if (inputText.trim() === '') return;
+
+                const newTodo = {
+                    id: Date.now(),
+                    text: inputText,
+                    isDone: false //토글용 Boolen 값 추가
+                };
+
+                setTodos([...todos, newTodo]);
+                setInputText('');
+
+
+            };
+            const handleRemove = (id) => {
+                setTodos(todos.filter( todo=>todo.id !== id ));
+            };
+            const handleToggle = (id) => {
+                
+                setTodos(
+                    todos.map(todo => 
+                        todo.id === id
+                            ? {...todo, isDone:!todo.isDone} 
+                            :todo
+                    )
+                )
+            };
+            return (
+                    <div>
+                        <h3>Todo List</h3>
+                        <input 
+                            type="text"
+                            value={inputText}
+                            onChange={handleChange}
+                        />
+                        <button onClick={handleAdd}>추가</button>
+
+                        <div>
+                            {/*TodoItem 사용해서 출력*/}
+                            {todos.map(todo=>(
+                                <TodoItem 
+                                key={todo.id} 
+                                todo={todo} 
+                                onRemove={handleRemove}
+                                onToggle={handleToggle}
+                                /> //li 대신 Todoitem을 반복 출력. props 활용. event 활용.
+                                //반복 랜더링 item에 key 속성 추가
+                                //todo 객체의 고유값 id 활용                              
+                            ))}
+                        </div>
+                    </div>
+            )
+        }
+
+        function App(){
+            return(
+                //참고 react App 코드에서는 <> </> 없어도 돼.
+                //왜냐하면 App이 이미 하나의 부모 요소(div) 로 전체를 감싸서 return 함.
+                //React 컴포넌트는 return할 때 최상위 태그가 1개여야 해.
+                //근데 너는 이미 최상위가 div 하나
+                <div>
+                    <h1>오늘의 할일</h1>
+                     <TodoList />
+                </div>            
+            )
+        }
+        
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+
+    </script>
+</body>
+</html>
