@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script> 
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const {useState} = React;
+
+        //TodoItem 컴포넌트
+        //props: todo, onRemove, onToggle : 리스트 추가 아이템
+        function TodoItem( {todo, onRemove, onToggle} ){
+            return(
+                <p>
+                    <input type="checkbox" onClick={ ()=>onToggle(todo.id,todo.text) } />
+                    <span>{todo.text}</span>
+                    <button onClick={ ()=>onRemove(todo.id) }>x</button>
+                </p>
+            )
+        }
+        //Todolist 컴포넌트
+        function TodoList(){
+            // 상태(state) 만들기
+            //const [todos, setTodos] = useState([]); 
+            const [todos, setTodos] = useState([{id:1, text: '밤에 영화보기'}]); 
+            const [inputValue, setInputValue] = useState(''); //초기 값
+            const [nextTodos, setNextTodos] =useState(2);
+        
+
+            // 함수들 구현
+            const handleChange = (e) => {setInputValue(e.target.value)};
+            const handleAdd = () => {
+                if (inputValue.trim() === '') return; //빈간이면 실행하지 않음
+                //newTodo= {id:2, text: input 값}
+                const newTodo = { id:nextTodos, text:inputValue };
+                //todos = [ {id:1, text: '밤에 영화보기'} {id:2, text: input 값} ]
+                setTodos([...todos, newTodo]);
+                //nextTodos = 3
+                setNextTodos(nextTodos + 1);
+                //inputValue = ''
+                setInputValue('');
+
+            };
+            const handleRemove = (idToRemove) => {
+                const updateTodos = todos.filter(todo=> todo.id !== idToRemove );
+                setTodos(updateTodos);
+            };
+            const handleToggle = (idClicked, textInputed) => {
+                //text 앞 뒤에 <del> </del>을 추가
+                //console.log(todos);
+                console.log(id);
+                //setTodos( id, {<del>{text}<del>}  );
+            };
+
+            return (
+                    <div>
+                        <h3>Todo List</h3>
+                        <input type="text" value={inputValue}  onChange={handleChange} />
+                        <button onClick={handleAdd}>추가</button>
+
+                        <div>
+                            {/*TodoItem 사용해서 출력*/}
+                            {todos.map(todo=>(
+                                //todoitem에 고유한 key값 추가
+                                <TodoItem key={todo.id} todo={todo} onRemove={handleRemove} onToggle={handleToggle}> 
+                                </TodoItem> //li 대신 Todoitem을 반복 출력. props 활용. event 활용.
+                            ))}
+                        </div>
+                    </div>
+            )
+        }
+
+        function App(){
+            return(
+                //참고 react App 코드에서는 <> </> 없어도 돼.
+                //왜냐하면 App이 이미 하나의 부모 요소(div) 로 전체를 감싸서 return 함.
+                //React 컴포넌트는 return할 때 최상위 태그가 1개여야 해.
+                //근데 너는 이미 최상위가 div 하나
+                <div>
+                    <h1>오늘의 할일</h1>
+                     <TodoList />
+                </div>
+                
+            )
+        }
+        
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+
+    </script>
+</body>
+</html>

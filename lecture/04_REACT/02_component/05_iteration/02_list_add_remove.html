@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script> 
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        
+        const {useState} = React;
+
+        function Namelist() {
+
+            const [inputValue, setInputValue] = useState('');
+            const [names, setNames] = useState( [ {id: 1, text: '판다'}] );
+            //useState는 React Hook이라서 반드시 컴포넌트 함수(Namelist) 안에서만 써야 해.
+            //1) 왜 컴포넌트 안에서만 써야 하냐?
+            // React는 컴포넌트를 실행하면서
+            // "이 컴포넌트는 state가 몇 개 있네?"
+            // "첫 번째 state는 inputValue"
+            // "두 번째 state는 names"
+            // 이걸 순서대로 기억해.
+            // 즉 React는 내부적으로 이런 식으로 관리한다고 보면 돼:
+            // Namelist 컴포넌트가 렌더링될 때
+            // useState 호출 순서를 기준으로 상태를 저장한다.
+            // 그래서 useState는 컴포넌트 실행 흐름 안에서만 동작할 수 있어.
+            // 2) 만약 함수 밖에 쓰면?
+            // const [names, setNames] = useState([]);
+            // 이걸 함수 밖에서 쓰면, 그 순간은
+            // ❌ React가 "지금 어떤 컴포넌트를 렌더링 중인지" 모르는 상태야.
+            // 그래서 React는 에러를 냄: Invalid hook call
+
+            const [nextId, setNextId] = useState(2);
+            // nextId : 현재 다음에 추가될 id 값 (처음엔 2)
+            // setNextId : nextId 값을 바꾸는 함수 
+
+            const handleChange = (e) => setInputValue(e.target.value);
+
+            const handleAdd = () => {
+                if (inputValue.trim() === '') return;
+                const newName = {id: nextId, text: inputValue};
+
+                setNames([...names, newName]);
+                setNextId(nextId + 1);
+                setInputValue(''); //입력창을 비워주기 위해서 쓰는 것
+            }
+
+            const handleRemove = (idToRemove) =>{
+                /*
+                filter: 기존 배열에서 callback 함수를 각 요소마다 실행하고,
+                true를 반환하는 요소들로만 새로운 배열을 반환
+                */
+                //id로 넘어온 값과 일치하지 않는 객체만 다시 배열로 반환
+                const updateNames = names.filter(name => name.id !== idToRemove );
+                setNames(updateNames); 
+
+
+            }
+
+                return (
+                    <> 
+                        <input type="text" value={inputValue} onChange={handleChange} placeholder="이름을 입력하세요." />
+                        <button onClick={handleAdd}>추가</button>
+
+                        <ul>
+                            {names.map(name=>( 
+                                //(): 암시적인 return 의미. {}중괄호 썼을때 return; 필수   
+
+                                //map → JSX용 요소 배열을 만들어줌 (React에 딱 맞음)
+                                //forEach → 그냥 반복만 하고 결과가 없음 (JSX에 넣기 부적절)
+                                //React에서는 리스트 렌더링할 때 map을 거의 무조건 씀.
+                                <li key={name.id}>
+                                    {name.text}
+                                    <button onClick={ ()=> handleRemove(name.id) }>삭제</button>
+                                </li>
+                            ))}
+                        </ul>
+
+                    </>
+                )
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<Namelist />);
+
+    </script>
+</body>
+</html>
