@@ -68,7 +68,6 @@
                     <button onClick={ () => setOtherCount(otherCount + 1)}>클릭</button>
                     {/*state가 바뀔때마다 리렌더링*/}
                 </div>
-
             )
         }
 
@@ -92,15 +91,15 @@
                 //2) useEffect가 다시 실행되기 직전
                 //count가 바뀌면 effect를 다시 실행해야 하니까
                 //그 전에 기존 effect를 정리하기 위해 cleanup 실행함.
-            return () => {
-                    console.log('타이머를 정리합니다.(Unmount)');
-                    clearInterval(timerId); //생성했던 타이머 제거
-                }
-            }, [] );
+                return () => {
+                        console.log('타이머를 정리합니다.(Unmount)');
+                        clearInterval(timerId); //생성했던 타이머 제거
+                    }
+                }, [] );
 
-            return (
-                <h3>타이머가 동작 중입니다. (콘솔 확인)</h3>
-            );
+                return (
+                    <h3>타이머가 동작 중입니다. (콘솔 확인)</h3>
+                );
         }
 
         function App(){
