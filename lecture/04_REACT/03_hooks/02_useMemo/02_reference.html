@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script> 
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        const { useState, useEffect, useMemo } = React;
+
+
+        function App() {
+                const [isKorea, setIskorea] = useState(true);
+                const [number, setNumber] = useState(0);
+                //1. 마운트 되었을때 App이 먼저 렌더링
+                console.log('렌더링...');
+
+                // 기존 코드
+                // const location = {
+                //     country: isKorea ? '한국' : '외국'
+                // };
+                
+                // 개선 코드
+                // useEffect 안의 컴포넌트가 실행되지 않음.
+                // location 객체를 새로 만들지 않기 때문에
+                const location = useMemo( () => {
+                    return { country: isKorea ? '한국': '외국'}
+                }, [isKorea]); //isKorea 값이 바뀔 때 만 새로운 객체를 만들어줘
+
+                //2. 앱이 바뀌든 안바뀌든 앱 호출 시점에 호출 됨
+                //location은 같지만 숫자를 바꿔도 주소값이 바꼈다고 생각하고 useffect가 계속 호출 됨
+                useEffect( ()=>{
+                    console.log('useEffect 호출됨... location이 변경되었습니다.');
+                }, [location] ); //location 객체의 값이 바뀔때 마다 실행한다.
+
+                return (
+                    <> 
+                        <h2>지금 당신이 있는 위치는? </h2>
+                        <p>국가: {location.country}</p>
+                        <button onClick={()=> setIskorea(!isKorea) }>국가 토글하기</button>
+                        <hr />
+                        <h2>좋아하는 숫자를 입력해 주세요</h2>
+                        <input 
+                            type="number"
+                            value={number} 
+                            onChange={e=> setNumber(e.target.value)}
+                        />               
+                    </>
+                )
+        }
+        
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+
+    </script>
+</body>
+</html>

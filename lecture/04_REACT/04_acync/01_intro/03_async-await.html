@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script> 
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+</head>
+<body>
+    <h1>콘솔 확인!</h1>
+
+    <script> 
+
+        function increase(number){
+            const promise = new Promise( (resolve, reject) => {
+                setTimeout( ()=>{
+                    const result = number + 10;
+
+                    if(result > 50){
+                        //실패 -> reject 함수 호출하며 에러 전달
+                        const e = new Error('숫자가 너무 큽니다.!');
+                        return reject(e); 
+                    }
+                    //성공 -> 계산된 결과와 함께 resolve 처리
+                    resolve(result);
+                },1000 );
+            } );
+            return promise;
+        }
+        /*
+        async를 붙이면 promise를 반환한다.
+        참고)run은 예약어 아님. 개발자가 지은 함수 이름
+        */
+        
+        async function run(){
+
+            try{
+            console.log('작업시작...');
+            //await를 붙여야지만, Promise 작업이 끝날때 까지 기다렸다가, 
+            // 작업이 다 끝나면 resolve된 결과 값을 result 변수에 할당
+            let result = await increase(0); 
+            console.log(result);
+
+            result = await increase(result);
+            console.log(result);
+
+            result = await increase(result);
+            console.log(result);
+            
+            result = await increase(result);
+            console.log(result);
+            
+            result = await increase(result);
+            console.log(result);
+            }catch(error){ //try 블럭 안에서 reject 되면 catch 블록 실행
+                console.error(error);
+            } 
+            console.log('모든 작업이 끝났습니다.');
+        }
+        run(); // 실행!
+    </script>
+</body>
+</html>

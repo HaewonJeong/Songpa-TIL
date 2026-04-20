@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script> 
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+</head>
+<body>
+    <h1>콘솔 확인!</h1>
+
+    <script> 
+        /*
+        - Promise
+        비동기 작업이 미래의 언젠가 끝날 텐데,
+        작업이 끝나면 성공(resolve)했는지 실패(reject) 했는지 꼭 알려줄게!
+        라고 약속하는 '약속 증서' 객체를 먼저 반환하는 개념이다.
+        */
+       /*
+       Promise는 생성할 때 함수 하나를 받는데,
+        그 함수 안에서 비동기 작업을 수행하고 결과에 따라:
+
+        성공이면 resolve(값)
+        실패면 reject(에러)      
+
+       Promise 객체가 기본으로 제공하는 "메서드(method)"
+       Promise는 내부적으로 상태가 있음:
+        pending (대기중)
+        fulfilled (성공, resolve됨)
+        rejected (실패, reject됨)
+
+        그리고 Promise는 규칙이 있어:
+        resolve() 되면 → fulfilled 상태가 되고 → .then() 실행
+        reject() 되면 → rejected 상태가 되고 → .catch() 실행
+       */
+
+        function increase(number){
+            const promise = new Promise( (resolve, reject) => {
+                setTimeout( ()=>{ //비동기 상황/응답 대기(1초 뒤에 응답이 온 것처럼 흉내내기 위해 씀
+                    const result = number + 10;
+
+                    //1초 뒤에 10을 더하고, 50이 넘으면 실패, 아니면 성공
+                    if(result > 50){
+                        //실패 -> reject 함수 호출하며 에러 전달
+                        const e = new Error('숫자가 너무 큽니다.!');
+                        return reject(e); //실패한 결과값 담아서 보냄
+                    }
+                    //성공 -> 계산된 결과와 함께 resolve 처리
+                    resolve(result);
+                },1000 );
+            } );
+            return promise;//promise 객체를 반환함
+        }
+        /* 프로미스 체이닝:
+        then은 실행하고 끝나는 게 아니라 "새 Promise"를 돌려줌
+        즉 이런 느낌: promise.then(...)  // 결과가 Promise임
+        그래서 결과가 Promise니까 또 .then()을 붙일 수 있는 거야.*/
+        increase(0)
+            .then(number => { //increase가 성공하면 그 결과(number)를 받아서 실행
+                console.log(number);
+                return increase(number);
+            })
+            .then(number => {
+                console.log(number);
+                return increase(number);
+            })            
+            .then(number => {
+                console.log(number);
+                return increase(number);
+            })            
+            .then(number => {
+                console.log(number);
+                return increase(number);
+            })                      
+            .then(number => {
+                console.log(number);
+                return increase(number);
+            })
+            .catch(error=>{ //.then() 체인 중간에 실패 reject 하면 실행 됨.
+                console.error(error);
+            })
+            .finally(()=>{ //성공하든, 실패하든 상관없이 무조건 마지막에 실행
+                console.log('모든 작업이 끝났습니다.');
+            })
+
+    </script>
+</body>
+</html>
