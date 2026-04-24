@@ -13,16 +13,22 @@ export default function Home() {
   return (
     <>
     <section>
-      <Link href="async"> 비동기 구현 </Link>      
+      <Link href="async"> 비동기 구현 </Link>
+      <Link href="/persist">Persist(새고로침 유지)</Link>
+      <Link href="/query">유저목록(Query)</Link>
+      <Link href="/crud-test">CRUD</Link>        
     </section>
+
     <section>
       <h2>User: {user ? user.name : "로그인 전" }</h2>
       <button onClick={()=> login( {name: "판다"} )}>로그인</button>
       {/* 유저 객체에 null 대신 "판다"를 default로 준다. */}
       <button onClick={logout}>로그아웃</button>
     </section>
+
       <h2>장바구니 상품: {items.length}개</h2>
       <button onClick={()=>addItem({id: Date.now(), name:"새 상품"})}>상품 추가</button>
+
     <section>
       <button onClick={openModal}>모달 열기</button>
       {isModalOpen && (
@@ -32,6 +38,7 @@ export default function Home() {
         </div>
       )}
     </section>
+
     </>
   );
 }
