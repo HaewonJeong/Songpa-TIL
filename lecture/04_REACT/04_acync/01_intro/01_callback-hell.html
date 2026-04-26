@@ -23,10 +23,19 @@
        //3초 뒤 실행할 일을 맡겨두고 다음 코드부터 계속 실행하는 방식(논블로킹)
        console.log('감자튀김을 주문합니다.');
 
+       //1. increase의 매개 변수(Parameter)는 그냥 '빈 상자'일 뿐입니다.
+       //2. 우리가 함수를 호출할 때, 빈 상자에 '무엇'을 넣느냐에 따라 정체가 결정됩니다.
+       // 만약, 우리가 두번 째 칸에 숫자를 넣었다면 callback은 숫자가 됩니다.
+       // increase(0, 100); 
+       // 이제 상자(callback) 안에는 숫자 100이 들어있습니다.
+       // 그런데 우리는 저 두 번째 상자에 '함수'를 통째로 구겨 넣었습니다!
+       //3.increase 내부에서는 상자 안의 함수를 꺼내 씁니다.
+
        function increase(number, callback){
         setTimeout(() => {
             const result = number + 10;
             console.log(result);
+            
             if (callback){
                 callback(result);
             }

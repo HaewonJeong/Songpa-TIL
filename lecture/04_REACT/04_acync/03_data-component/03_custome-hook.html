@@ -1,6 +1,52 @@
 
  <!--Customhook 예제
  -현업에서는 React Query(TanStack Query)를 사용한다.-->
+<!-- 
+ /*
+================================================
+ 커스텀 훅(Custom Hook)과 AbortController 이해하기
+================================================
+
+커스텀 훅(Custom Hook)에 AbortController까지! 리액트의 진짜 '실무형' 고급 기법에 진입하셨네요. 처음 보면 외계어처럼 생소한 게 당연합니다.
+
+질문해주신 {signal: controller.signal}은 한마디로 "네트워크 통신 강제 취소 수신기"입니다.
+왜 이게 필요한지, 그리고 어떻게 동작하는지 배달 앱에 비유해서 아주 쉽게 설명해 드릴게요.
+
+------------------------------------------------
+ 1. 왜 통신을 취소해야 할까요? (문제 상황)
+------------------------------------------------
+사용자가 '회원 목록' 페이지에 들어옵니다. (컴포넌트 등장)
+fetch로 서버에 회원 데이터를 달라고 요청합니다. (인터넷이 느려서 3초 정도 걸린다고 가정해 볼게요.)
+그런데 1초 만에 사용자가 마음이 바뀌어서 '뒤로 가기'를 누르거나 다른 페이지로 가버렸습니다. (컴포넌트 사라짐)
+
+이때 취소 기능이 없다면?
+사용자는 이미 다른 페이지를 보고 있는데, 리액트는 뒤에서 혼자 2초를 더 기다렸다가 데이터를 받아옵니다. 그리고 이미 사라지고 없는 '회원 목록' 화면에 데이터를 그리려고(setData) 시도하다가 에러를 뿜어내거나 메모리를 낭비하게 됩니다.
+
+------------------------------------------------
+ 2. 해결책: AbortController (배달 취소 비유)
+------------------------------------------------
+이 문제를 해결하기 위해 도입된 것이 AbortController입니다.
+
+- const controller = new AbortController();
+  : 통신을 취소할 수 있는 '리모컨'을 하나 만듭니다.
+
+- fetch('URL', {signal: controller.signal})
+  : 서버에 요청을 보낼 때, "이 요청에는 취소 수신기(signal)가 달려있어!"라고 꼬리표를 달아줍니다.
+
+- return () => controller.abort();
+  : useEffect 안에서 return은 컴포넌트가 화면에서 사라질 때(Unmount) 실행되는 '클린업(정리) 함수'입니다. 즉, "화면이 닫히면 아까 만든 리모컨의 취소 버튼(.abort)을 냅다 눌러라!"라는 뜻입니다.
+
+이렇게 해두면 사용자가 데이터를 기다리다 지쳐서 뒤로 가기를 눌렀을 때, 진행 중이던 통신이 아주 깔끔하게 강제 중단(Abort) 됩니다.
+
+------------------------------------------------
+ 3. Custom Hook은 왜 쓴 걸까요?
+------------------------------------------------
+작성하신 코드를 보면 ItemList 컴포넌트 안쪽이 굉장히 깔끔합니다.
+원래라면 ItemList 안에 useState 3개, 긴 useEffect, fetch, catch 등이 득실거렸을 겁니다. 그런데 그 복잡한 통신 로직을 useFetch라는 이름의 나만의 함수(커스텀 훅)로 싹 다 몰아넣고 밖으로 뺐습니다.
+
+덕분에 ItemList는 "화면을 예쁘게 그리는 일(UI)"에만 집중할 수 있게 되었고, useFetch는 "데이터를 가져오는 일(Logic)"만 전담하게 되었습니다. 이게 바로 현업에서 커스텀 훅을 만드는 가장 큰 이유입니다.
+*/
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,7 +80,6 @@
             const [data, setData] = useState(null); //서버에서 받아올 목록 초기화. 어떤 값이 들어올지 몰라서 null
             const [loading, setLoading] = useState(true); //로딩상태
             const [error, setError] = useState(null); //에러 상태
-
             useEffect(() => {
 
             //컨트롤러가 사라지기 직전 useeffect의 cleanup 함수가 동작
@@ -48,12 +93,12 @@
                     if(!response.ok){
                         throw new Error('네트워크 응답 문제가 있습니다.');
                     }
+                    console.log(controller.signal); //출력 결과: {aborted: false, reason: undefined, onabort: null} 
                     return response.json();     
                 })//fetch가 성공해서 response를 받으면 then이 실행됨.
                 //responseUsers: 바로 위 response.json()의 결과값이 자동으로 들어오는 변수
                 .then(responseData => setData(responseData)) //= return response.json(); 
                 .catch(error => {
-
                     if(error.name === 'AbortError'){
                         console.log('통신이 정상적으로 중단되었습니다.');
                     }else{
@@ -65,7 +110,7 @@
 
                 //return 사용 시 useEffect의 클린업 함수 호출
                 //이 hook을 쓰던 컴포넌트가 화면에서 사라지면 즉시 취소
-                return () => controller.abort();
+                return ()=>controller.abort();
             },[url]);
             /* 의존성 배열안에 속성이 변경되도 useEffect가 재실행 되는지 ? 
                 : 객체/배열 → 주소(참조)가 바뀌어야 실행됨. 재실행 X
