@@ -20,7 +20,7 @@ export default function MenuDetail(){
     return(
         menu && 
         <>
-            <h1>{menu.menuName} 상세페이지!</h1>
+            <h1>={menu.menuName} 상세페이지!=</h1>
             <h3>메뉴 가격: {menu.menuPrice}</h3>
             <h3>메뉴 종류: {menu.categoryName}</h3>
             <h3>메뉴 설명: {menu.detail.description}</h3>

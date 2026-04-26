@@ -15,15 +15,15 @@ export default function Navbar() {
 
     return(
         <>
-            <div>
+            <div>=Navbar.jsx=
                 <ul>
                     {/* 현재 경로가 어디인지에 따라 스타일 적용 */}
-                    <li><Link style={isActive('/') ? activeStyle:undefined} href="/">메인</Link></li>
-                    <li><Link style={isActive('/about') ? activeStyle:undefined} href="/about">소개</Link></li>
-                    <li><Link style={isActive('/menu') ? activeStyle:undefined} href="/menu">메뉴</Link></li>
-                    <li><Link style={isActive('/dashboard') ? activeStyle:undefined} href="/dashboard">관리자</Link></li>
+                    <li><Link style={isActive('/') ? activeStyle:undefined} href="/">1메인</Link></li>
+                    <li><Link style={isActive('/about') ? activeStyle:undefined} href="/about">2소개</Link></li>
+                    <li><Link style={isActive('/menu') ? activeStyle:undefined} href="/menu">3메뉴</Link></li>
+                    <li><Link style={isActive('/dashboard') ? activeStyle:undefined} href="/dashboard">4관리자</Link></li>
              
-                </ul>
+                </ul>=Navbar.jsx=
             </div>
         </>
     )
