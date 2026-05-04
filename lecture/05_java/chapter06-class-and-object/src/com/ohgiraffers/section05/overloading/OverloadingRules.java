@@ -2,20 +2,31 @@ package com.ohgiraffers.section05.overloading;
 
 public class OverloadingRules {
 
-    //1. 기본 생성자
+    /*
+    * [ 메서드 시그니처 ]
+    * 메서드를 식별하는 고유한 바코드 = '메서드 이름' + '매개변수 타입, 개수, 순서'
+    *
+    * 오버로딩: 이름은 같지만 시그니처가 다른 메서드를 여러 개 정의하는 기술
+    * */
 
-    //2. 매개변수 있는 생성자
-    public User(String id, String pwd, String name, java.util.Date enrollDate {
-        /*this(): 같은 클래스 내의 다른 생서자를 호출한다.
-        * 반드시 생서자 내부의 '첫 번째 줄'에 작성해야 한다.*/
-        this(id, pwd, name);
-        this.enrollData = enrollDate;
-        System.out.println("모든 필드를 초기화 하는 생성자 호출 됨...");
-    }
+    public void test() {}
 
-    /*오버로드의 성립기준 : 같은 1)매개변수 타입, 2)개수, 3)순서*/
-    //불성립 : 매개변수 '이름'만 다른 경우 (시그니처 동일)
-    public void test(int num2){
+    // 매개변수 '개수'가 다른 경우
+    public void test(int num){}
 
-    }
+    // 매개변수 '타입'이 다른 경우
+    public void test(String str){}
+
+    // 매개변수 '순서'가 다른 경우
+    public void test(int num, String str){}
+    public void test(String str, int num){}
+
+    // 불성립: 반환 타입만 다른 경우 (시그니처 동일 -> 컴파일 에러)
+//    public int test() {}
+
+    // 불성립: 접근 제한자만 다른 경우 (시그니처 동일)
+//    private void test() {}
+
+    // 불성립: 매개변수 '이름'만 다른 경우 (시그니처 동일)
+//    public void test(int num2){}
 }

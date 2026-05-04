@@ -8,7 +8,6 @@
       <module fileurl="file://$PROJECT_DIR$/chapter03-method-and-api/chapter03-method-and-api.iml" filepath="$PROJECT_DIR$/chapter03-method-and-api/chapter03-method-and-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/chapter04-control-flow/chapter04-control-flow.iml" filepath="$PROJECT_DIR$/chapter04-control-flow/chapter04-control-flow.iml" />
       <module fileurl="file://$PROJECT_DIR$/chapter05-array/chapter05-array.iml" filepath="$PROJECT_DIR$/chapter05-array/chapter05-array.iml" />
-      <module fileurl="file://$PROJECT_DIR$/chapter06-class-and-object/chapter06-class-and-object.iml" filepath="$PROJECT_DIR$/chapter06-class-and-object/chapter06-class-and-object.iml" />
     </modules>
   </component>
 </project>
