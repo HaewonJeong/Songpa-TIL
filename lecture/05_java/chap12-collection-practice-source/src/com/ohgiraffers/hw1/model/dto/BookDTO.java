@@ -1,8 +1,8 @@
 package com.ohgiraffers.hw1.model.dto;
-
 import java.util.Comparator;
 
 public class BookDTO implements Comparable<BookDTO> {
+    public static int count = 1000;
     int bNo;
     int category;
     String title;
@@ -12,6 +12,7 @@ public class BookDTO implements Comparable<BookDTO> {
     }
 
     public BookDTO(int category, String title, String author) {
+        this.bNo = count++;
         this.category = category;
         this.title = title;
         this.author = author;
@@ -51,12 +52,11 @@ public class BookDTO implements Comparable<BookDTO> {
 
     @Override
     public String toString() {
-        return "BookDTO{" +
-                "bNo=" + bNo +
-                ", category=" + category +
-                ", title='" + title + '\'' +
-                ", author='" + author + '\'' +
-                '}';
+        return "[책 정보]" +
+                "bNo : " + bNo +
+                ", category : " + category +
+                ", title : '" + title + '\'' +
+                ", author : '" + author + '\'';
     }
 
     public int compareTo(BookDTO bookdto){
