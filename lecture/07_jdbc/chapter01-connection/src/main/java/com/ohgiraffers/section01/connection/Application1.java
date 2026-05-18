@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/* Application 1 : JDBC 기본 연결하기 */
 public class Application1 {
     public static void main(String[] args) {
         /*
@@ -22,6 +23,8 @@ public class Application1 {
             con = DriverManager.getConnection("jdbc:mysql://localhost/employeedb", "ohgiraffers", "ohgiraffers");
 
             System.out.println("con = " + con);
+
+
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
